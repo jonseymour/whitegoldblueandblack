@@ -15,14 +15,15 @@ func randomPermuteSlice(in []int, stride int) []int {
 		out[i] = e
 	}
 
-	for i := 0; i+stride < len(out); {
-		j := int(r.Int31n(int32(len(out)-(i+stride)))) + i + stride
+	strides := len(out)/stride - 1
+
+	for i := 0; i < strides; i++ {
+		j := int(r.Int31n(int32(strides-i))) + i
 		for k := 0; k < stride; k++ {
-			t := out[j+k]
-			out[j+k] = out[i+k]
-			out[i+k] = t
+			t := out[j*stride+k]
+			out[j*stride+k] = out[i*stride+k]
+			out[i*stride+k] = t
 		}
-		i += stride
 	}
 
 	return out
