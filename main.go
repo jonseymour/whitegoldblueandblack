@@ -23,17 +23,25 @@ func main() {
 	brightness := false
 	readJpeg := false
 	permute := false
+	runBlacken := false
+	minPercentile := 0
+	maxPercentile := 50
+	blackenProbability := 1.0
 
 	flag.BoolVar(&brightness, "sort-by-brightness", false, "sort the image by brighness using blocks of width stride")
 	flag.IntVar(&stride, "stride", 1, "Number of pixels to shift.")
 	flag.BoolVar(&randomize, "randomize", false, "randomly sort the rows and colums of the image.")
+	flag.BoolVar(&runBlacken, "blacken", false, "randomly sort the rows and colums of the image.")
 	flag.BoolVar(&readJpeg, "jpeg", false, "The input is a jpeg rather than png.")
+	flag.IntVar(&minPercentile, "min-percentile", 0, "The minimum percentile for blackening")
+	flag.IntVar(&maxPercentile, "max-percentile", 50, "The max percentile for blackening")
+	flag.Float64Var(&blackenProbability, "blacken-prob", 1.0, "The probability of blackening")
 	flag.Parse()
 
 	var img image.Image
 	var err error
 
-	processImage := readJpeg || randomize || brightness
+	processImage := readJpeg || randomize || brightness || runBlacken
 
 	if processImage {
 		if readJpeg {
@@ -41,6 +49,15 @@ func main() {
 		} else {
 			img, err = png.Decode(os.Stdin)
 		}
+	}
+
+	if runBlacken {
+		transform := &blacken{
+			minPercentile:      minPercentile,
+			maxPercentile:      maxPercentile,
+			blackenProbability: blackenProbability,
+		}
+		img = transform.transform(img)
 	}
 
 	var permutation [][]image.Point
@@ -51,7 +68,7 @@ func main() {
 	} else if brightness {
 		permutation = sortByBrightness(img)
 		permute = true
-	} else if readJpeg {
+	} else if processImage {
 		// just fallthrough
 	} else {
 		fmt.Fprintf(os.Stderr, "whitegoldblankandblue - (c) Jon Seymour 2015\n")
@@ -61,21 +78,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	bounds := img.Bounds()
-	outbounds := image.Rectangle{
-		Min: image.Point{
-			X: 0,
-			Y: 0,
-		},
-		Max: image.Point{
-			X: bounds.Max.X - bounds.Min.X,
-			Y: bounds.Max.Y - bounds.Min.Y,
-		},
-	}
-	out := image.NewRGBA(outbounds)
+	out := sameSize(img)
+	outbounds := out.Bounds()
 
-	for x := outbounds.Min.X; x < outbounds.Max.X; x++ {
-		for y := outbounds.Min.Y; y < outbounds.Max.Y; y++ {
+	for x := 0; x < outbounds.Max.X; x++ {
+		for y := 0; y < outbounds.Max.Y; y++ {
 			if permute {
 				out.Set(x, y, img.At(permutation[x][y].X, permutation[x][y].Y))
 			} else {

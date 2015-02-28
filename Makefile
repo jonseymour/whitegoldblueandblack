@@ -1,7 +1,10 @@
-GO_FILES=main.go randomize.go zigzag.go brightness.go
+GO_FILES=main.go randomize.go zigzag.go brightness.go util.go blacken.go
 WGBB=bin/wgbb
+MIN_PERCENTILE=0
+MAX_PERCENTILE=40
+BLACKEN_PROB=1.0
 
-all: $(WGBB) output/random.png output/brightness.png output/snippet-brightness.png output/gold-snippet.png output/white-snippet.png
+all: $(WGBB) output/random.png output/brightness.png output/snippet-brightness.png output/gold-snippet.png output/white-snippet.png output/blacken.png
 
 output/original.png: input/original.jpg
 	$(WGBB) --jpeg  < $<  > $@
@@ -20,6 +23,9 @@ output/gold-snippet.png: input/gold-snippet.jpg
 
 output/white-snippet.png: input/white-snippet.jpg
 	$(WGBB) --jpeg --sort-by-brightness < $<  > $@
+
+output/blacken.png: input/original.jpg
+	$(WGBB) --jpeg --blacken --min-percentile $(MIN_PERCENTILE) --max-percentile $(MAX_PERCENTILE) --blacken-prob $(BLACKEN_PROB) < $<  > $@
 
 bin/wgbb: $(GO_FILES)
 	go build -o bin/wgbb

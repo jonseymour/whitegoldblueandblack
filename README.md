@@ -4,7 +4,10 @@ whitegoldblueandblack - tools to explore the great #whiteandgold #blueandblack m
 
 SYNOPSIS
 ========
-	wgbb [--jpeg] [--sort-by-brightness]|[--randomize [--stride=n]] < image > image
+	wgbb [--jpeg]
+		 [--sort-by-brightness]
+		 [--randomize [--stride=n]]
+		 [--blacken [--min-percentile=0] [--max-percentile=50] [--black-prob=1.0]] < image > image
 
 BUILDING
 ========
@@ -50,3 +53,10 @@ Here is the same sort by brightness analysis done to a small snippet of the 'whi
 ![white-snippet-location](doc/white-snippet-location.png)
 <br/>
 ![white-snippet](input/white-snippet.jpg) ![white-snippet-sorted-by-brightness](doc/white-snippet.png)
+
+Here is what happens when the darkest 40% of pixels are replaced with black.
+
+	wgbb --jpeg --blacken --min-percentile 0 --max-percentile 40 --blacken-prob 1.0 < input/original.jpg  > output/blacken.png
+
+![original](input/original.jpg) ![blackened](doc/blacken.png)
+
