@@ -35,7 +35,7 @@ Here is the same sort by brightness analysis done to a small snippet of the dres
 
 ![snippet](input/snippet.jpg) ![snippet-sorted-by-brightness](doc/snippet-brightness.png)
 
-Here is the same sort by brightness analysis done to a snippet of the gold region near the neckline:
+Here is the same sort by brightness analysis done to a snippet of the gold (or black) region near the neckline:
 
 	wgbb --jpeg --sort-by-brightness < input/gold-snippet.jpeg > output/gold-snippet.png
 
@@ -43,7 +43,7 @@ Here is the same sort by brightness analysis done to a snippet of the gold regio
 <br/>
 ![gold-snippet](input/gold-snippet.jpg) ![gold-snippet-sorted-by-brightness](doc/gold-snippet.png)
 
-Here is the same sort by brightness analysis done to a small snippet of the white region on the subject's left shoulder:
+Here is the same sort by brightness analysis done to a small snippet of the 'white (or blue)' region on the subject's left shoulder:
 
 	wgbb --jpeg --sort-by-brightness < input/white-snippet.jpeg > output/white-snippet.png
 
