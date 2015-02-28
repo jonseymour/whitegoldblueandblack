@@ -32,11 +32,12 @@ Here is the same image sorted by brightness:
 
 ![sorted-by-brightness](doc/brightness.png)
 
-Here is the same sort by brightness analysis done to a small snippet of the dress:
+Here is a sort by brightness analysis and randomization done to a small snippet of the dress:
 
 	wgbb --jpeg --sort-by-brightness < input/snippet.jpeg > output/snippet-brightness.png
+	wgbb --jpeg --randomize< input/snippet.jpeg > output/snippet-random.png
 
-![snippet](input/snippet.jpg) ![snippet-sorted-by-brightness](doc/snippet-brightness.png)
+![snippet](input/snippet.jpg) ![snippet-sorted-by-brightness](doc/snippet-brightness.png) ![snippet-random](doc/snippet-random.png)
 
 Here is the same sort by brightness analysis done to a snippet of the gold (or black) region near the neckline:
 

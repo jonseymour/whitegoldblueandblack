@@ -4,7 +4,7 @@ MIN_PERCENTILE=0
 MAX_PERCENTILE=40
 BLACKEN_PROB=1.0
 
-all: $(WGBB) output/random.png output/brightness.png output/snippet-brightness.png output/gold-snippet.png output/white-snippet.png output/blacken.png
+all: $(WGBB) output/random.png output/brightness.png output/snippet-brightness.png output/gold-snippet.png output/white-snippet.png output/blacken.png output/snippet-random.png
 
 output/original.png: input/original.jpg
 	$(WGBB) --jpeg  < $<  > $@
@@ -16,6 +16,9 @@ output/brightness.png: output/original.png
 	$(WGBB) --sort-by-brightness  < $<  > $@
 
 output/snippet-brightness.png: input/snippet.jpg
+	$(WGBB) --jpeg --sort-by-brightness < $<  > $@
+
+output/snippet-random.png: input/snippet.jpg
 	$(WGBB) --jpeg --sort-by-brightness < $<  > $@
 
 output/gold-snippet.png: input/gold-snippet.jpg
