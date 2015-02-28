@@ -29,15 +29,24 @@ Here is the same image sorted by brightness:
 
 ![sorted-by-brightness](doc/brightness.png)
 
-Here is the same analysis done to a small snippet:
+Here is the same sort by brightness analysis done to a small snippet of the dress:
 
 	wgbb --jpeg --sort-by-brightness < input/snippet.jpeg > output/snippet-brightness.png
 
 ![snippet](input/snippet.jpg) ![snippet-sorted-by-brightness](doc/snippet-brightness.png)
 
-Here is the same analysis done to a snippet of the gold region near the neckline:
+Here is the same sort by brightness analysis done to a snippet of the gold region near the neckline:
 
 	wgbb --jpeg --sort-by-brightness < input/gold-snippet.jpeg > output/gold-snippet.png
 
-![snippet](input/gold-snippet.jpg) ![snippet-sorted-by-brightness](doc/gold-snippet.png)
+![gold-snippet-location](doc/gold-snippet-location.png)
+<br/>
+![gold-snippet](input/gold-snippet.jpg) ![gold-snippet-sorted-by-brightness](doc/gold-snippet.png)
 
+Here is the same sort by brightness analysis done to a small snippet of the white region on the subject's left shoulder:
+
+	wgbb --jpeg --sort-by-brightness < input/white-snippet.jpeg > output/white-snippet.png
+
+![white-snippet-location](doc/white-snippet-location.png)
+<br/>
+![white-snippet](input/white-snippet.jpg) ![white-snippet-sorted-by-brightness](doc/white-snippet.png)
