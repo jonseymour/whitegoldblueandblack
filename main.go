@@ -27,7 +27,7 @@ func main() {
 
 	stride := 1
 	randomize := false
-	brightness := false
+	distance := false
 	readJpeg := false
 	permute := false
 	runColorize := false
@@ -37,23 +37,23 @@ func main() {
 	colorHex := "#000000"
 	refColorHex := "#000000"
 
-	flag.BoolVar(&brightness, "sort-by-brightness", false, "sort the image by brighness using blocks of width stride")
-	flag.IntVar(&stride, "stride", 1, "Number of pixels to shift.")
-	flag.BoolVar(&randomize, "randomize", false, "randomly sort the rows and colums of the image.")
-	flag.BoolVar(&runColorize, "colorize", false, "randomly sort the rows and colums of the image.")
+	flag.BoolVar(&randomize, "randomize", false, "randomly sort the rows and colums of the image using blocks of stride pixels dimension.")
+	flag.IntVar(&stride, "stride", 1, "Size of the block used for randomizing.")
+	flag.BoolVar(&distance, "sort-by-distance", false, "Sort the image by color space distance.")
+	flag.BoolVar(&runColorize, "colorize", false, "colorize pixels with a distance between --min-percentile and --max-percentile of --ref-color.")
 	flag.BoolVar(&readJpeg, "jpeg", false, "The input is a jpeg rather than png.")
-	flag.IntVar(&minPercentile, "min-percentile", 0, "The minimum percentile for colorizing.")
-	flag.IntVar(&maxPercentile, "max-percentile", 50, "The max percentile for colorizing.")
+	flag.IntVar(&minPercentile, "min-percentile", 0, "The minimum distance percentile for colorizing.")
+	flag.IntVar(&maxPercentile, "max-percentile", 50, "The maximum distance percentile for colorizing.")
 	flag.Float64Var(&colorizeProbability, "colorize-prob", 1.0, "The probability of colorizing.")
 	flag.StringVar(&colorHex, "color", "#000000", "The color to use for colorizing.")
-	flag.StringVar(&refColorHex, "ref-color", "#000000", "The reference color to use for brightness sorting.")
+	flag.StringVar(&refColorHex, "ref-color", "#000000", "The reference color to use for distance sorting.")
 	flag.Parse()
 
 	var img image.Image
 	var aColor, aRefColor color.Color
 	var err error
 
-	processImage := readJpeg || randomize || brightness || runColorize
+	processImage := readJpeg || randomize || distance || runColorize
 
 	if processImage {
 		if readJpeg {
@@ -89,8 +89,8 @@ func main() {
 	if randomize {
 		permutation = randomizeRowsAndColumns(img, stride)
 		permute = true
-	} else if brightness {
-		permutation = sortByBrightness(img, aRefColor)
+	} else if distance {
+		permutation = sortByDistance(img, aRefColor)
 		permute = true
 	} else if processImage {
 		// just fallthrough

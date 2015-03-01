@@ -7,7 +7,7 @@ import (
 	"sort"
 )
 
-type brightnessSort struct {
+type distanceSort struct {
 	img         image.Image
 	ref         color.Color
 	length      int
@@ -18,7 +18,7 @@ type brightnessSort struct {
 	permutation []image.Point
 }
 
-func newBrightnessSort(img image.Image, ref color.Color) *brightnessSort {
+func newDistanceSort(img image.Image, ref color.Color) *distanceSort {
 	bounds := img.Bounds()
 	minX := bounds.Min.X
 	minY := bounds.Min.Y
@@ -30,7 +30,7 @@ func newBrightnessSort(img image.Image, ref color.Color) *brightnessSort {
 			permutation[i*lenY+j] = image.Point{X: minX + i, Y: minY + j}
 		}
 	}
-	w := &brightnessSort{
+	w := &distanceSort{
 		img:         img,
 		ref:         ref,
 		length:      lenY * lenX,
@@ -44,7 +44,7 @@ func newBrightnessSort(img image.Image, ref color.Color) *brightnessSort {
 	return w
 }
 
-func brightness(c color.Color, ref color.Color) float64 {
+func distance(c color.Color, ref color.Color) float64 {
 	r, g, b, _ := c.RGBA()
 	rr, rg, rb, _ := ref.RGBA()
 	return math.Sqrt(float64(r-rr)*float64(r-rr) +
@@ -52,29 +52,29 @@ func brightness(c color.Color, ref color.Color) float64 {
 		float64(b-rb)*float64(b-rb))
 }
 
-func (w *brightnessSort) Len() int {
+func (w *distanceSort) Len() int {
 	return w.length
 }
 
-func (w *brightnessSort) Less(i, j int) bool {
+func (w *distanceSort) Less(i, j int) bool {
 	iImg := w.permutation[i]
 	jImg := w.permutation[j]
 	iColor := w.img.At(iImg.X, iImg.Y)
 	jColor := w.img.At(jImg.X, jImg.Y)
-	return brightness(iColor, w.ref) < brightness(jColor, w.ref)
+	return distance(iColor, w.ref) < distance(jColor, w.ref)
 }
 
-func (w *brightnessSort) Swap(i, j int) {
+func (w *distanceSort) Swap(i, j int) {
 	tmp := w.permutation[i]
 	w.permutation[i] = w.permutation[j]
 	w.permutation[j] = tmp
 }
 
-// sorts all the pixels of an image by their RGB brightness, then use
+// sorts all the pixels of an image by their RGB distance, then use
 // a zig-zag sort to permute the pixels so that the darkest pixels
-// are at the top-left and the brightness pixels at the bottom right.
-func sortByBrightness(img image.Image, ref color.Color) [][]image.Point {
-	w := newBrightnessSort(img, ref)
+// are at the top-left and the distance pixels at the bottom right.
+func sortByDistance(img image.Image, ref color.Color) [][]image.Point {
+	w := newDistanceSort(img, ref)
 	z := newZigZagSort(w.lenX, w.lenY)
 
 	permutation := make([][]image.Point, w.lenX)

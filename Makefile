@@ -1,4 +1,4 @@
-GO_FILES=main.go randomize.go zigzag.go brightness.go util.go colorize.go colorful.go
+GO_FILES=main.go randomize.go zigzag.go distance.go util.go colorize.go colorful.go
 WGBB=bin/wgbb
 MIN_PERCENTILE=0
 MAX_PERCENTILE=40
@@ -8,8 +8,8 @@ STRIDE=1
 
 all: $(WGBB) \
 	output/random.png \
-	output/brightness.png \
-	output/snippet-brightness.png \
+	output/distance.png \
+	output/snippet-distance.png \
 	output/gold-snippet.png \
 	output/white-snippet.png \
 	output/blacken.png \
@@ -21,20 +21,20 @@ output/original.png: input/original.jpg
 output/random.png: output/original.png
 	$(WGBB) --randomize  < $<  > $@
 
-output/brightness.png: output/original.png
-	$(WGBB) --sort-by-brightness  < $<  > $@
+output/distance.png: output/original.png
+	$(WGBB) --sort-by-distance  < $<  > $@
 
-output/snippet-brightness.png: input/snippet.jpg
-	$(WGBB) --jpeg --sort-by-brightness < $<  > $@
+output/snippet-distance.png: input/snippet.jpg
+	$(WGBB) --jpeg --sort-by-distance < $<  > $@
 
 output/snippet-random.png: input/snippet.jpg
 	$(WGBB) --jpeg --randomize --stride=$(STRIDE) < $<  > $@
 
 output/gold-snippet.png: input/gold-snippet.jpg
-	$(WGBB) --jpeg --sort-by-brightness < $<  > $@
+	$(WGBB) --jpeg --sort-by-distance < $<  > $@
 
 output/white-snippet.png: input/white-snippet.jpg
-	$(WGBB) --jpeg --sort-by-brightness < $<  > $@
+	$(WGBB) --jpeg --sort-by-distance < $<  > $@
 
 output/blacken.png: input/original.jpg
 	$(WGBB) --jpeg --colorize --min-percentile $(MIN_PERCENTILE) --max-percentile $(MAX_PERCENTILE) --colorize $(COLORIZE_PROB) < $<  > $@
