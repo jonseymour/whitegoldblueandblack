@@ -10,11 +10,17 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/lucasb-eyer/go-colorful"
 	"image"
 	"image/jpeg"
 	"image/png"
 	"os"
 )
+
+func die(msg string) {
+	fmt.Fprintf(os.Stderr, "%s\n", msg)
+	os.Exit(1)
+}
 
 func main() {
 
@@ -23,25 +29,27 @@ func main() {
 	brightness := false
 	readJpeg := false
 	permute := false
-	runBlacken := false
+	runColorize := false
 	minPercentile := 0
 	maxPercentile := 50
-	blackenProbability := 1.0
+	colorizeProbability := 1.0
+	color := "#000000"
 
 	flag.BoolVar(&brightness, "sort-by-brightness", false, "sort the image by brighness using blocks of width stride")
 	flag.IntVar(&stride, "stride", 1, "Number of pixels to shift.")
 	flag.BoolVar(&randomize, "randomize", false, "randomly sort the rows and colums of the image.")
-	flag.BoolVar(&runBlacken, "blacken", false, "randomly sort the rows and colums of the image.")
+	flag.BoolVar(&runColorize, "colorize", false, "randomly sort the rows and colums of the image.")
 	flag.BoolVar(&readJpeg, "jpeg", false, "The input is a jpeg rather than png.")
-	flag.IntVar(&minPercentile, "min-percentile", 0, "The minimum percentile for blackening")
-	flag.IntVar(&maxPercentile, "max-percentile", 50, "The max percentile for blackening")
-	flag.Float64Var(&blackenProbability, "blacken-prob", 1.0, "The probability of blackening")
+	flag.IntVar(&minPercentile, "min-percentile", 0, "The minimum percentile for colorizing.")
+	flag.IntVar(&maxPercentile, "max-percentile", 50, "The max percentile for colorizing.")
+	flag.Float64Var(&colorizeProbability, "colorize-prob", 1.0, "The probability of colorizing.")
+	flag.StringVar(&color, "color", "#000000", "The color to use for colorizing.")
 	flag.Parse()
 
 	var img image.Image
 	var err error
 
-	processImage := readJpeg || randomize || brightness || runBlacken
+	processImage := readJpeg || randomize || brightness || runColorize
 
 	if processImage {
 		if readJpeg {
@@ -51,13 +59,18 @@ func main() {
 		}
 	}
 
-	if runBlacken {
-		transform := &blacken{
-			minPercentile:      minPercentile,
-			maxPercentile:      maxPercentile,
-			blackenProbability: blackenProbability,
+	if runColorize {
+		if theColor, err := colorful.Hex(color); err != nil {
+			die(err.Error())
+		} else {
+			transform := &colorize{
+				minPercentile:       minPercentile,
+				maxPercentile:       maxPercentile,
+				colorizeProbability: colorizeProbability,
+				color:               theColor,
+			}
+			img = transform.transform(img)
 		}
-		img = transform.transform(img)
 	}
 
 	var permutation [][]image.Point

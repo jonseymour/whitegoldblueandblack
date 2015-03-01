@@ -7,15 +7,16 @@ import (
 	"time"
 )
 
-type blacken struct {
-	minPercentile      int
-	maxPercentile      int
-	blackenProbability float64
+type colorize struct {
+	minPercentile       int
+	maxPercentile       int
+	colorizeProbability float64
+	color               color.Color
 }
 
-// given an image, blacken the pixels between the specified percentiles with
+// given an image, colorize the pixels between the specified percentiles with
 // the specified probability, generating a new image.
-func (b *blacken) transform(in image.Image) image.Image {
+func (b *colorize) transform(in image.Image) image.Image {
 
 	brightnessSort := newBrightnessSort(in)
 	minX := b.minPercentile * len(brightnessSort.permutation) / 100
@@ -27,8 +28,8 @@ func (b *blacken) transform(in image.Image) image.Image {
 
 	for x := minX; x < maxX; x++ {
 		p := brightnessSort.permutation[x]
-		if r.Float64() < b.blackenProbability {
-			out.Set(p.X, p.Y, color.Black)
+		if r.Float64() < b.colorizeProbability {
+			out.Set(p.X, p.Y, b.color)
 		}
 	}
 	return out
