@@ -30,7 +30,7 @@ The color to be used as the reference color for distance calculations during (--
 
 ##--sort-by-distance
 
-The pixels of the image are sorted in distance order - darkest to top-left, brightest to bottom-right
+The pixels of the image are sorted in color space distance order - pixels closest to the reference color are sorted top-left, pixels furthest from the reference color are sorted bottom-right.
 
 ##--randomize
 
@@ -38,7 +38,7 @@ Columns and rows of {stride} pixel width of the input image are randomly permute
 
 ##--colorize
 
-Pixels within the specified percentiles (--min-percentile, --max-percentile) of brigthness are replaced with the specified color (--color) with a specified probability (--colorize-prob).
+Pixels within the specified percentiles (--min-percentile, --max-percentile) of distance are replaced with the specified color (--color) with a specified probability (--colorize-prob).
 
 #BUILDING
 
