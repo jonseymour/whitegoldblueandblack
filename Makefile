@@ -1,4 +1,16 @@
-GO_FILES=main.go randomize.go zigzag.go distance.go util.go colorize.go colorful.go
+GO_FILES=\
+	./colorful.go \
+	./colorize.go \
+	./distance.go \
+	./main.go \
+	./randomize.go \
+	./util.go \
+	./zigzag.go \
+	./image/color/distance.go \
+	./image/color/lab.go \
+	./image/lab.go \
+	./image/util/set.go
+
 WGBB=bin/wgbb
 MIN_PERCENTILE=0
 MAX_PERCENTILE=40
