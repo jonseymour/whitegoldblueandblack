@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/jonseymour/whitegoldblueandblack/image/util"
 	"image"
 	"image/color"
 	"math/rand"
@@ -25,7 +26,8 @@ func (b *colorize) transform(in image.Image) image.Image {
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	out := copy(in)
+	out := sameSize(in)
+	util.Copy(in, out)
 
 	for x := minX; x < maxX; x++ {
 		p := distanceSort.permutation[x]

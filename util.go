@@ -19,15 +19,3 @@ func sameSize(in image.Image) *image.RGBA64 {
 	out := image.NewRGBA64(outbounds)
 	return out
 }
-
-func copy(in image.Image) *image.RGBA64 {
-	out := sameSize(in)
-	minX := in.Bounds().Min.X
-	minY := in.Bounds().Min.Y
-	for x := 0; x < out.Bounds().Max.X; x++ {
-		for y := 0; y < out.Bounds().Max.Y; y++ {
-			out.Set(x, y, in.At(minX+x, minY+y))
-		}
-	}
-	return out
-}
