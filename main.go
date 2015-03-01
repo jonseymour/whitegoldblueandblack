@@ -126,7 +126,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	out := sameSize(img)
+	var out *image.RGBA64
+
+	if permute {
+		maxX := len(permutation)
+		maxY := len(permutation[0])
+		out = image.NewRGBA64(image.Rectangle{image.Point{0, 0}, image.Point{maxX, maxY}})
+	} else {
+		out = sameSize(img)
+	}
+
 	outbounds := out.Bounds()
 
 	for x := 0; x < outbounds.Max.X; x++ {
