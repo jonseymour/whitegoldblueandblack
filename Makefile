@@ -61,7 +61,7 @@ bin/wgbb: $(GO_FILES)
 update-doc:
 	cd doc && \
 	for f in *.png; do \
-		! test -f ../output/$$ff || cp ../output/$$f .; \
+		! test -f ../output/$$f || cp ../output/$$f .; \
 	done
 
 clean:
