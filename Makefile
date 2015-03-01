@@ -58,5 +58,11 @@ bin/wgbb: $(GO_FILES)
 	go get -d .
 	go build -o bin/wgbb
 
+update-doc:
+	cd doc && \
+	for f in *.png; do \
+		! test -f ../output/$$ff || cp ../output/$$f .; \
+	done
+
 clean:
 	rm output/*
