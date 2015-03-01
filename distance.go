@@ -4,6 +4,7 @@ import (
 	distance "github.com/jonseymour/whitegoldblueandblack/image/color"
 	"image"
 	"image/color"
+	"math"
 	"sort"
 )
 
@@ -63,13 +64,18 @@ func sortByDistance(img image.Image, ref color.Color, metric distance.DistanceMe
 	lenX := (bounds.Max.X - bounds.Min.X)
 	lenY := (bounds.Max.Y - bounds.Min.Y)
 	w := newDistanceSort(img, ref, metric)
-	z := newZigZagSort(lenX, lenY)
+	dim := int(math.Sqrt(float64(lenX * lenY)))
+	z := newZigZagSort(dim, dim)
 
-	permutation := make([][]image.Point, lenX)
+	permutation := make([][]image.Point, dim)
 	for i, _ := range permutation {
-		permutation[i] = make([]image.Point, lenY)
+		permutation[i] = make([]image.Point, dim)
 	}
+	limit := dim * dim
 	for i, p := range w.permutation {
+		if i == limit {
+			break
+		}
 		permutation[z.permutation[i].X][z.permutation[i].Y] = p
 	}
 	return permutation
