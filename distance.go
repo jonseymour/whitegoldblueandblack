@@ -72,10 +72,7 @@ func sortByDistance(img image.Image, ref color.Color, metric distance.DistanceMe
 		permutation[i] = make([]image.Point, dim)
 	}
 	limit := dim * dim
-	for i, p := range w.permutation {
-		if i == limit {
-			break
-		}
+	for i, p := range w.permutation[0:limit] {
 		permutation[z.permutation[i].X][z.permutation[i].Y] = p
 	}
 	return permutation
