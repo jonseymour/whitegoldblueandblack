@@ -10,11 +10,6 @@ import (
 type distanceSort struct {
 	img         image.Image
 	ref         color.Color
-	length      int
-	minX        int
-	minY        int
-	lenX        int
-	lenY        int
 	permutation []image.Point
 	metric      distance.DistanceMetric
 }
@@ -34,11 +29,6 @@ func newDistanceSort(img image.Image, ref color.Color, metric distance.DistanceM
 	w := &distanceSort{
 		img:         img,
 		ref:         ref,
-		length:      lenY * lenX,
-		lenX:        lenX,
-		lenY:        lenY,
-		minX:        minX,
-		minY:        minY,
 		permutation: permutation,
 		metric:      metric,
 	}
@@ -47,7 +37,8 @@ func newDistanceSort(img image.Image, ref color.Color, metric distance.DistanceM
 }
 
 func (w *distanceSort) Len() int {
-	return w.length
+	bounds := w.img.Bounds()
+	return (bounds.Max.X - bounds.Min.X) * (bounds.Max.Y - bounds.Min.Y)
 }
 
 func (w *distanceSort) Less(i, j int) bool {
@@ -68,12 +59,15 @@ func (w *distanceSort) Swap(i, j int) {
 // a zig-zag sort to permute the pixels so that the darkest pixels
 // are at the top-left and the distance pixels at the bottom right.
 func sortByDistance(img image.Image, ref color.Color, metric distance.DistanceMetric) [][]image.Point {
+	bounds := img.Bounds()
+	lenX := (bounds.Max.X - bounds.Min.X)
+	lenY := (bounds.Max.Y - bounds.Min.Y)
 	w := newDistanceSort(img, ref, metric)
-	z := newZigZagSort(w.lenX, w.lenY)
+	z := newZigZagSort(lenX, lenY)
 
-	permutation := make([][]image.Point, w.lenX)
+	permutation := make([][]image.Point, lenX)
 	for i, _ := range permutation {
-		permutation[i] = make([]image.Point, w.lenY)
+		permutation[i] = make([]image.Point, lenY)
 	}
 	for i, p := range w.permutation {
 		permutation[z.permutation[i].X][z.permutation[i].Y] = p
