@@ -40,6 +40,7 @@ output/blacken.png: input/original.jpg
 	$(WGBB) --jpeg --colorize --min-percentile $(MIN_PERCENTILE) --max-percentile $(MAX_PERCENTILE) --colorize $(COLORIZE_PROB) < $<  > $@
 
 bin/wgbb: $(GO_FILES)
+	go get -d .
 	go build -o bin/wgbb
 
 clean:
