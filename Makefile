@@ -1,4 +1,4 @@
-GO_FILES=main.go randomize.go zigzag.go brightness.go util.go colorize.go
+GO_FILES=main.go randomize.go zigzag.go brightness.go util.go colorize.go colorful.go
 WGBB=bin/wgbb
 MIN_PERCENTILE=0
 MAX_PERCENTILE=40
