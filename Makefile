@@ -1,5 +1,4 @@
 GO_FILES=\
-	./colorful.go \
 	./colorize.go \
 	./distance.go \
 	./main.go \
