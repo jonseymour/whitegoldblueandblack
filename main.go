@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"github.com/lucasb-eyer/go-colorful"
 	"image"
+	"image/color"
 	"image/jpeg"
 	"image/png"
 	"os"
@@ -33,7 +34,8 @@ func main() {
 	minPercentile := 0
 	maxPercentile := 50
 	colorizeProbability := 1.0
-	color := "#000000"
+	colorHex := "#000000"
+	refColorHex := "#000000"
 
 	flag.BoolVar(&brightness, "sort-by-brightness", false, "sort the image by brighness using blocks of width stride")
 	flag.IntVar(&stride, "stride", 1, "Number of pixels to shift.")
@@ -43,10 +45,12 @@ func main() {
 	flag.IntVar(&minPercentile, "min-percentile", 0, "The minimum percentile for colorizing.")
 	flag.IntVar(&maxPercentile, "max-percentile", 50, "The max percentile for colorizing.")
 	flag.Float64Var(&colorizeProbability, "colorize-prob", 1.0, "The probability of colorizing.")
-	flag.StringVar(&color, "color", "#000000", "The color to use for colorizing.")
+	flag.StringVar(&colorHex, "color", "#000000", "The color to use for colorizing.")
+	flag.StringVar(&refColorHex, "ref-color", "#000000", "The reference color to use for brightness sorting.")
 	flag.Parse()
 
 	var img image.Image
+	var aColor, aRefColor color.Color
 	var err error
 
 	processImage := readJpeg || randomize || brightness || runColorize
@@ -59,18 +63,25 @@ func main() {
 		}
 	}
 
+	aColor, err = colorful.Hex(colorHex)
+	if err != nil {
+		die(err.Error())
+	}
+
+	aRefColor, err = colorful.Hex(refColorHex)
+	if err != nil {
+		die(err.Error())
+	}
+
 	if runColorize {
-		if theColor, err := colorful.Hex(color); err != nil {
-			die(err.Error())
-		} else {
-			transform := &colorize{
-				minPercentile:       minPercentile,
-				maxPercentile:       maxPercentile,
-				colorizeProbability: colorizeProbability,
-				color:               theColor,
-			}
-			img = transform.transform(img)
+		transform := &colorize{
+			minPercentile:       minPercentile,
+			maxPercentile:       maxPercentile,
+			colorizeProbability: colorizeProbability,
+			color:               aColor,
+			refColor:            aRefColor,
 		}
+		img = transform.transform(img)
 	}
 
 	var permutation [][]image.Point
@@ -79,7 +90,7 @@ func main() {
 		permutation = randomizeRowsAndColumns(img, stride)
 		permute = true
 	} else if brightness {
-		permutation = sortByBrightness(img)
+		permutation = sortByBrightness(img, aRefColor)
 		permute = true
 	} else if processImage {
 		// just fallthrough

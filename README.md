@@ -6,9 +6,11 @@ whitegoldblueandblack - tools to explore the great #whiteandgold #blueandblack m
 
 	where option is one or more of:
 		[--jpeg]
+		[--color {hex-color}]
+		[--ref-color {hex-color}]
 		[--sort-by-brightness]
 		[--randomize [--stride=n]]
-		[--colorize [--min-percentile=0] [--max-percentile=50] [--colorize-prob=1.0]]
+		[--colorize [--min-percentile=n] [--max-percentile=n] [--colorize-prob=p]]
 
 	stdin is a PNG or (--jpeg: JPEG) image. stdout is a PNG image.
 
@@ -17,6 +19,14 @@ whitegoldblueandblack - tools to explore the great #whiteandgold #blueandblack m
 ##--jpeg
 
 The input is a JPEG image, otherwise the input is a PNG image.
+
+##--color
+
+The color to be used for colorizing. Defaults to #000000
+
+##--ref-color
+
+The color to be used as the reference color for brightness calculations during (--sort-by-brightness) or colorization (--colorize). Defaults to #000000.
 
 ##--sort-by-brightness
 
@@ -28,7 +38,7 @@ Columns and rows of {stride} pixel width of the input image are randomly permute
 
 ##--colorize
 
-Pixels within the specified percentiles (--min-percentile, --max-percentile) of brigthness are replaced with the specified color (--color) with a specified probability (--colorize-prob)
+Pixels within the specified percentiles (--min-percentile, --max-percentile) of brigthness are replaced with the specified color (--color) with a specified probability (--colorize-prob).
 
 #BUILDING
 

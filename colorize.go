@@ -12,13 +12,14 @@ type colorize struct {
 	maxPercentile       int
 	colorizeProbability float64
 	color               color.Color
+	refColor            color.Color
 }
 
 // given an image, colorize the pixels between the specified percentiles with
 // the specified probability, generating a new image.
 func (b *colorize) transform(in image.Image) image.Image {
 
-	brightnessSort := newBrightnessSort(in)
+	brightnessSort := newBrightnessSort(in, b.refColor)
 	minX := b.minPercentile * len(brightnessSort.permutation) / 100
 	maxX := b.maxPercentile * len(brightnessSort.permutation) / 100
 

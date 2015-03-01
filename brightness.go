@@ -9,6 +9,7 @@ import (
 
 type brightnessSort struct {
 	img         image.Image
+	ref         color.Color
 	length      int
 	minX        int
 	minY        int
@@ -17,7 +18,7 @@ type brightnessSort struct {
 	permutation []image.Point
 }
 
-func newBrightnessSort(img image.Image) *brightnessSort {
+func newBrightnessSort(img image.Image, ref color.Color) *brightnessSort {
 	bounds := img.Bounds()
 	minX := bounds.Min.X
 	minY := bounds.Min.Y
@@ -31,6 +32,7 @@ func newBrightnessSort(img image.Image) *brightnessSort {
 	}
 	w := &brightnessSort{
 		img:         img,
+		ref:         ref,
 		length:      lenY * lenX,
 		lenX:        lenX,
 		lenY:        lenY,
@@ -42,11 +44,12 @@ func newBrightnessSort(img image.Image) *brightnessSort {
 	return w
 }
 
-func brightness(c color.Color) float64 {
+func brightness(c color.Color, ref color.Color) float64 {
 	r, g, b, _ := c.RGBA()
-	return math.Sqrt(float64(r)*float64(r) +
-		float64(g)*float64(g) +
-		float64(b)*float64(b))
+	rr, rg, rb, _ := ref.RGBA()
+	return math.Sqrt(float64(r-rr)*float64(r-rr) +
+		float64(g-rg)*float64(g-rg) +
+		float64(b-rb)*float64(b-rb))
 }
 
 func (w *brightnessSort) Len() int {
@@ -58,7 +61,7 @@ func (w *brightnessSort) Less(i, j int) bool {
 	jImg := w.permutation[j]
 	iColor := w.img.At(iImg.X, iImg.Y)
 	jColor := w.img.At(jImg.X, jImg.Y)
-	return brightness(iColor) < brightness(jColor)
+	return brightness(iColor, w.ref) < brightness(jColor, w.ref)
 }
 
 func (w *brightnessSort) Swap(i, j int) {
@@ -70,8 +73,8 @@ func (w *brightnessSort) Swap(i, j int) {
 // sorts all the pixels of an image by their RGB brightness, then use
 // a zig-zag sort to permute the pixels so that the darkest pixels
 // are at the top-left and the brightness pixels at the bottom right.
-func sortByBrightness(img image.Image) [][]image.Point {
-	w := newBrightnessSort(img)
+func sortByBrightness(img image.Image, ref color.Color) [][]image.Point {
+	w := newBrightnessSort(img, ref)
 	z := newZigZagSort(w.lenX, w.lenY)
 
 	permutation := make([][]image.Point, w.lenX)
