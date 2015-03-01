@@ -4,7 +4,7 @@ import (
 	"image"
 )
 
-func sameSize(in image.Image) *image.RGBA {
+func sameSize(in image.Image) *image.RGBA64 {
 	bounds := in.Bounds()
 	outbounds := image.Rectangle{
 		Min: image.Point{
@@ -16,11 +16,11 @@ func sameSize(in image.Image) *image.RGBA {
 			Y: bounds.Max.Y - bounds.Min.Y,
 		},
 	}
-	out := image.NewRGBA(outbounds)
+	out := image.NewRGBA64(outbounds)
 	return out
 }
 
-func copy(in image.Image) *image.RGBA {
+func copy(in image.Image) *image.RGBA64 {
 	out := sameSize(in)
 	minX := in.Bounds().Min.X
 	minY := in.Bounds().Min.Y
