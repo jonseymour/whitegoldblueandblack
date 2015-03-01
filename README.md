@@ -67,11 +67,12 @@ Here is the same image randomized with:
 
 ![randomized](doc/random.png)
 
-Here is the same image sorted by distance:
+Here is the same image sorted by distance in the RGB and Lab color spaces:
 
-	wgbb --jpeg --sort-by-distance < input/original.jpeg > output/distance.png
+	wgbb --jpeg --sort-by-distance < input/original.jpeg > output/distance-rgb.png
+	wgbb --jpeg --sort-by-distance --lab < input/original.jpeg > output/distance-lab.png
 
-![sorted-by-distance](doc/distance.png)
+![sorted-by-distance-rgb](doc/distance-rgb.png) ![sorted-by-distance-lab](doc/distance-lab.png)
 
 Here is a sort by distance analysis and randomization done to a small snippet of the dress:
 

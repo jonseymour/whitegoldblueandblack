@@ -20,7 +20,8 @@ STRIDE=1
 
 all: $(WGBB) \
 	output/random.png \
-	output/distance.png \
+	output/distance-rgb.png \
+	output/distance-lab.png \
 	output/snippet-distance.png \
 	output/gold-snippet.png \
 	output/white-snippet.png \
@@ -33,8 +34,11 @@ output/original.png: input/original.jpg
 output/random.png: output/original.png
 	$(WGBB) --randomize  < $<  > $@
 
-output/distance.png: output/original.png
+output/distance-rgb.png: output/original.png
 	$(WGBB) --sort-by-distance  < $<  > $@
+
+output/distance-lab.png: output/original.png
+	$(WGBB) --lab --sort-by-distance  < $<  > $@
 
 output/snippet-distance.png: input/snippet.jpg
 	$(WGBB) --jpeg --sort-by-distance < $<  > $@
