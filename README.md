@@ -92,3 +92,6 @@ Here is what happens when the darkest 40% of pixels are replaced with black.
 
 ![blackened](doc/blacken.png)
 
+#REVISIONS
+
+* 0.1.0 - development release
