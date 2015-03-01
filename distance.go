@@ -1,9 +1,9 @@
 package main
 
 import (
+	distance "github.com/jonseymour/whitegoldblueandblack/image/color"
 	"image"
 	"image/color"
-	"math"
 	"sort"
 )
 
@@ -16,9 +16,10 @@ type distanceSort struct {
 	lenX        int
 	lenY        int
 	permutation []image.Point
+	metric      distance.DistanceMetric
 }
 
-func newDistanceSort(img image.Image, ref color.Color) *distanceSort {
+func newDistanceSort(img image.Image, ref color.Color, metric distance.DistanceMetric) *distanceSort {
 	bounds := img.Bounds()
 	minX := bounds.Min.X
 	minY := bounds.Min.Y
@@ -39,17 +40,10 @@ func newDistanceSort(img image.Image, ref color.Color) *distanceSort {
 		minX:        minX,
 		minY:        minY,
 		permutation: permutation,
+		metric:      metric,
 	}
 	sort.Sort(w)
 	return w
-}
-
-func distance(c color.Color, ref color.Color) float64 {
-	r, g, b, _ := c.RGBA()
-	rr, rg, rb, _ := ref.RGBA()
-	return math.Sqrt(float64(r-rr)*float64(r-rr) +
-		float64(g-rg)*float64(g-rg) +
-		float64(b-rb)*float64(b-rb))
 }
 
 func (w *distanceSort) Len() int {
@@ -61,7 +55,7 @@ func (w *distanceSort) Less(i, j int) bool {
 	jImg := w.permutation[j]
 	iColor := w.img.At(iImg.X, iImg.Y)
 	jColor := w.img.At(jImg.X, jImg.Y)
-	return distance(iColor, w.ref) < distance(jColor, w.ref)
+	return w.metric(iColor, w.ref) < w.metric(jColor, w.ref)
 }
 
 func (w *distanceSort) Swap(i, j int) {
@@ -73,8 +67,8 @@ func (w *distanceSort) Swap(i, j int) {
 // sorts all the pixels of an image by their RGB distance, then use
 // a zig-zag sort to permute the pixels so that the darkest pixels
 // are at the top-left and the distance pixels at the bottom right.
-func sortByDistance(img image.Image, ref color.Color) [][]image.Point {
-	w := newDistanceSort(img, ref)
+func sortByDistance(img image.Image, ref color.Color, metric distance.DistanceMetric) [][]image.Point {
+	w := newDistanceSort(img, ref, metric)
 	z := newZigZagSort(w.lenX, w.lenY)
 
 	permutation := make([][]image.Point, w.lenX)

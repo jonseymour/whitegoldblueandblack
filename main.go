@@ -10,6 +10,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	lab "github.com/jonseymour/whitegoldblueandblack/image"
+	distance "github.com/jonseymour/whitegoldblueandblack/image/color"
+	util "github.com/jonseymour/whitegoldblueandblack/image/util"
 	"github.com/lucasb-eyer/go-colorful"
 	"image"
 	"image/color"
@@ -27,7 +30,7 @@ func main() {
 
 	stride := 1
 	randomize := false
-	distance := false
+	sortDistance := false
 	readJpeg := false
 	permute := false
 	runColorize := false
@@ -36,10 +39,12 @@ func main() {
 	colorizeProbability := 1.0
 	colorHex := "#000000"
 	refColorHex := "#000000"
+	useLab := false
+	useRgb := true
 
 	flag.BoolVar(&randomize, "randomize", false, "randomly sort the rows and colums of the image using blocks of stride pixels dimension.")
 	flag.IntVar(&stride, "stride", 1, "Size of the block used for randomizing.")
-	flag.BoolVar(&distance, "sort-by-distance", false, "Sort the image by color space distance.")
+	flag.BoolVar(&sortDistance, "sort-by-distance", false, "Sort the image by color space distance.")
 	flag.BoolVar(&runColorize, "colorize", false, "colorize pixels with a distance between --min-percentile and --max-percentile of --ref-color.")
 	flag.BoolVar(&readJpeg, "jpeg", false, "The input is a jpeg rather than png.")
 	flag.IntVar(&minPercentile, "min-percentile", 0, "The minimum distance percentile for colorizing.")
@@ -47,13 +52,20 @@ func main() {
 	flag.Float64Var(&colorizeProbability, "colorize-prob", 1.0, "The probability of colorizing.")
 	flag.StringVar(&colorHex, "color", "#000000", "The color to use for colorizing.")
 	flag.StringVar(&refColorHex, "ref-color", "#000000", "The reference color to use for distance sorting.")
+	flag.BoolVar(&useRgb, "rgb", false, "Use the RGBA64 color space for distance measurements.")
+	flag.BoolVar(&useLab, "lab", false, "Use the Lab color space for distance measurements.")
 	flag.Parse()
 
 	var img image.Image
 	var aColor, aRefColor color.Color
 	var err error
+	var metric distance.DistanceMetric
 
-	processImage := readJpeg || randomize || distance || runColorize
+	if !useLab {
+		useRgb = true
+	}
+
+	processImage := readJpeg || randomize || sortDistance || runColorize || useLab
 
 	if processImage {
 		if readJpeg {
@@ -61,6 +73,17 @@ func main() {
 		} else {
 			img, err = png.Decode(os.Stdin)
 		}
+	}
+
+	if useLab && useRgb {
+		die("At most one of --lab and --rgb may be specified.")
+	} else if useRgb {
+		metric = distance.RGBADistanceMetric
+	} else if useLab {
+		tmp := lab.NewLabImage(img.Bounds())
+		util.Copy(img, tmp)
+		img = tmp
+		metric = img.ColorModel().(*distance.LabColorModel).Distance
 	}
 
 	aColor, err = colorful.Hex(colorHex)
@@ -80,6 +103,7 @@ func main() {
 			colorizeProbability: colorizeProbability,
 			color:               aColor,
 			refColor:            aRefColor,
+			metric:              metric,
 		}
 		img = transform.transform(img)
 	}
@@ -89,8 +113,8 @@ func main() {
 	if randomize {
 		permutation = randomizeRowsAndColumns(img, stride)
 		permute = true
-	} else if distance {
-		permutation = sortByDistance(img, aRefColor)
+	} else if sortDistance {
+		permutation = sortByDistance(img, aRefColor, metric)
 		permute = true
 	} else if processImage {
 		// just fallthrough
