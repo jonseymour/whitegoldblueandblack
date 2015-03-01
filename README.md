@@ -11,6 +11,8 @@ whitegoldblueandblack - tools to explore the great #whiteandgold #blueandblack m
 		[--sort-by-distance]
 		[--randomize [--stride=n]]
 		[--colorize [--min-percentile=n] [--max-percentile=n] [--colorize-prob=p]]
+		[--rgb]
+		[--lab]
 
 	stdin is a PNG or (--jpeg: JPEG) image. stdout is a PNG image.
 
@@ -39,6 +41,14 @@ Columns and rows of {stride} pixel width of the input image are randomly permute
 ##--colorize
 
 Pixels within the specified percentiles (--min-percentile, --max-percentile) of distance are replaced with the specified color (--color) with a specified probability (--colorize-prob).
+
+##--rgb
+
+Perform distance calculations in the RGB color space. This is the default option.
+
+##--lab
+
+Perform distance calculations in the [CIE-Lab](http://en.wikipedia.org/wiki/Lab_color_space) color space.
 
 #BUILDING
 
