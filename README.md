@@ -1,20 +1,41 @@
-NAME
-====
+#NAME
 whitegoldblueandblack - tools to explore the great #whiteandgold #blueandblack mystery that erupted on the Internet in late February 2015.
 
-SYNOPSIS
-========
-	wgbb [--jpeg]
-		 [--sort-by-brightness]
-		 [--randomize [--stride=n]]
-		 [--blacken [--min-percentile=0] [--max-percentile=50] [--black-prob=1.0]] < image > image
+#SYNOPSIS
+	wgbb {option...} < image > image.png
 
-BUILDING
-========
+	where option is one or more of:
+		[--jpeg]
+		[--sort-by-brightness]
+		[--randomize [--stride=n]]
+		[--colorize [--min-percentile=0] [--max-percentile=50] [--colorize-prob=1.0]]
+
+	stdin is a PNG or (--jpeg: JPEG) image. stdout is a PNG image.
+
+#OPTIONS
+
+##--jpeg
+
+The input is a JPEG image, otherwise the input is a PNG image.
+
+##--sort-by-brightness
+
+The pixels of the image are sorted in brightness order - darkest to top-left, brightest to bottom-right
+
+##--randomize
+
+Columns and rows of {stride} pixel width of the input image are randomly permuted.
+
+##--colorize
+
+Pixels within the specified percentiles (--min-percentile, --max-percentile) of brigthness are replaced with the specified color (--color) with a specified probability (--colorize-prob)
+
+#BUILDING
+
+Install go,
 	make
 
-EXAMPLES
-========
+#EXAMPLES
 
 Here is the original image:
 
