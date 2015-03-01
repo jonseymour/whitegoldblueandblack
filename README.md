@@ -78,7 +78,7 @@ Here is the same sort by brightness analysis done to a small snippet of the 'whi
 
 Here is what happens when the darkest 40% of pixels are replaced with black.
 
-	wgbb --jpeg --blacken --min-percentile 0 --max-percentile 40 --blacken-prob 1.0 < input/original.jpg  > output/blacken.png
+	wgbb --jpeg --colorize --min-percentile 0 --max-percentile 40 --color "#000000" --colorize-prob 1.0 < input/original.jpg  > output/blacken.png
 
 ![blackened](doc/blacken.png)
 
