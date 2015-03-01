@@ -19,6 +19,9 @@ STRIDE=1
 
 all: $(WGBB) \
 	output/random.png \
+	output/random-2.png \
+	output/random-8.png \
+	output/random-16.png \
 	output/distance-rgb.png \
 	output/distance-lab.png \
 	output/snippet-distance.png \
@@ -32,6 +35,15 @@ output/original.png: input/original.jpg
 
 output/random.png: output/original.png
 	$(WGBB) --randomize  < $<  > $@
+
+output/random-2.png: output/original.png
+	$(WGBB) --randomize --stride=2  < $<  > $@
+
+output/random-8.png: output/original.png
+	$(WGBB) --randomize --stride=8  < $<  > $@
+
+output/random-16.png: output/original.png
+	$(WGBB) --randomize --stride=16  < $<  > $@
 
 output/distance-rgb.png: output/original.png
 	$(WGBB) --sort-by-distance  < $<  > $@

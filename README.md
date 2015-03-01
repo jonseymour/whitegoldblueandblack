@@ -61,11 +61,17 @@ Here is the original image:
 
 ![original](input/original.jpg)
 
-Here is the same image randomized with:
+Here is the same image randomized with various stride sizes:
 
 	wgbb --jpeg --randomize --stride=1 < input/original.jpeg > output/random.png
+	wgbb --jpeg --randomize --stride=2 < input/original.jpeg > output/random-2.png
+	wgbb --jpeg --randomize --stride=8 < input/original.jpeg > output/random-4.png
+	wgbb --jpeg --randomize --stride=16 < input/original.jpeg > output/random-8.png
 
 ![randomized](doc/random.png)
+![randomized](doc/random-2.png)
+![randomized](doc/random-8.png)
+![randomized](doc/random-16.png)
 
 Here is the same image sorted by distance in the RGB and Lab color spaces:
 
