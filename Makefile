@@ -19,31 +19,28 @@ STRIDE=1
 
 all: $(WGBB) \
 	output/random.png \
-	output/random-2.png \
-	output/random-8.png \
 	output/random-16.png \
+	output/random-32.png \
 	output/distance-rgb.png \
 	output/distance-lab.png \
 	output/snippet-distance.png \
 	output/gold-snippet.png \
 	output/white-snippet.png \
 	output/blacken.png \
-	output/snippet-random.png
+	output/snippet-random.png \
+	output/snippet-randomize-blocks.png
 
 output/original.png: input/original.jpg
 	$(WGBB) --jpeg  < $<  > $@
 
 output/random.png: output/original.png
-	$(WGBB) --randomize  < $<  > $@
-
-output/random-2.png: output/original.png
-	$(WGBB) --randomize --stride=2  < $<  > $@
-
-output/random-8.png: output/original.png
-	$(WGBB) --randomize --stride=8  < $<  > $@
+	$(WGBB) --randomize-blocks  < $<  > $@
 
 output/random-16.png: output/original.png
-	$(WGBB) --randomize --stride=16  < $<  > $@
+	$(WGBB) --randomize-blocks --width=16 --height=16  < $<  > $@
+
+output/random-32.png: output/original.png
+	$(WGBB) --randomize-blocks --width=32 --height=32  < $<  > $@
 
 output/distance-rgb.png: output/original.png
 	$(WGBB) --sort-by-distance  < $<  > $@
@@ -56,6 +53,9 @@ output/snippet-distance.png: input/snippet.jpg
 
 output/snippet-random.png: input/snippet.jpg
 	$(WGBB) --jpeg --randomize --stride=$(STRIDE) < $<  > $@
+
+output/snippet-randomize-blocks.png: input/snippet.jpg
+	$(WGBB) --jpeg --randomize-blocks  < $<  > $@
 
 output/gold-snippet.png: input/gold-snippet.jpg
 	$(WGBB) --jpeg --sort-by-distance < $<  > $@

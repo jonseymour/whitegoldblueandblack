@@ -63,15 +63,13 @@ Here is the original image:
 
 Here is the same image randomized with various stride sizes:
 
-	wgbb --jpeg --randomize --stride=1 < input/original.jpeg > output/random.png
-	wgbb --jpeg --randomize --stride=2 < input/original.jpeg > output/random-2.png
-	wgbb --jpeg --randomize --stride=8 < input/original.jpeg > output/random-4.png
-	wgbb --jpeg --randomize --stride=16 < input/original.jpeg > output/random-8.png
+	wgbb --jpeg --randomize-blocks --width=1 --height=1 < input/original.jpeg > output/random.png
+	wgbb --jpeg --randomize-blocks --width=16 --height=16 < input/original.jpeg > output/random-16.png
+	wgbb --jpeg --randomize-blocks --width=32 --height=32 < input/original.jpeg > output/random-32.png
 
 ![randomized](doc/random.png)
-![randomized](doc/random-2.png)
-![randomized](doc/random-8.png)
 ![randomized](doc/random-16.png)
+![randomized](doc/random-32.png)
 
 Here is the same image sorted by distance in the RGB and Lab color spaces:
 
@@ -83,9 +81,10 @@ Here is the same image sorted by distance in the RGB and Lab color spaces:
 Here is a sort by distance analysis and randomization done to a small snippet of the dress:
 
 	wgbb --jpeg --sort-by-distance < input/snippet.jpeg > output/snippet-distance.png
-	wgbb --jpeg --randomize< input/snippet.jpeg > output/snippet-random.png
+	wgbb --jpeg --randomize < input/snippet.jpeg > output/snippet-random.png
+	wgbb --jpeg --randomize-blocks < input/snippet.jpeg > output/snippet-randomize-blocks.png
 
-![snippet](input/snippet.jpg) ![snippet-sorted-by-distance](doc/snippet-distance.png) ![snippet-random](doc/snippet-random.png)
+![snippet](input/snippet.jpg) ![snippet-sorted-by-distance](doc/snippet-distance.png) ![snippet-random](doc/snippet-random.png) ![snippet-random](doc/snippet-randomize-blocks.png)
 
 Here is the same sort by distance analysis done to a snippet of the gold (or black) region near the neckline:
 
