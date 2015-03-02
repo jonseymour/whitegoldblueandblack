@@ -28,7 +28,10 @@ all: $(WGBB) \
 	output/white-snippet.png \
 	output/blacken.png \
 	output/snippet-random.png \
-	output/snippet-randomize-blocks.png
+	output/snippet-randomize-blocks.png \
+	output/mix-16x16.png \
+	output/mix-3x495.png \
+	output/snippet-mix.png
 
 output/original.png: input/original.jpg
 	$(WGBB) --jpeg  < $<  > $@
@@ -41,6 +44,12 @@ output/random-16.png: output/original.png
 
 output/random-32.png: output/original.png
 	$(WGBB) --randomize-blocks --width=32 --height=32  < $<  > $@
+
+output/mix-16x16.png: output/original.png
+	$(WGBB) --mix-blocks --width=16 --height=16  < $<  > $@
+
+output/mix-3x495.png: output/original.png
+	$(WGBB) --mix-blocks --height=3 --width=495  < $<  > $@
 
 output/distance-rgb.png: output/original.png
 	$(WGBB) --sort-by-distance  < $<  > $@
@@ -56,6 +65,9 @@ output/snippet-random.png: input/snippet.jpg
 
 output/snippet-randomize-blocks.png: input/snippet.jpg
 	$(WGBB) --jpeg --randomize-blocks  < $<  > $@
+
+output/snippet-mix.png: input/snippet.jpg
+	$(WGBB) --jpeg --mix-blocks --height 3 --width 210  < $<  > $@
 
 output/gold-snippet.png: input/gold-snippet.jpg
 	$(WGBB) --jpeg --sort-by-distance < $<  > $@

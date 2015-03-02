@@ -8,8 +8,12 @@ whitegoldblueandblack - tools to explore the great #whiteandgold #blueandblack m
 		[--jpeg]
 		[--color {hex-color}]
 		[--ref-color {hex-color}]
+		[--width {pixels}]
+		[--height {pixels}]
 		[--sort-by-distance]
 		[--randomize [--stride=n]]
+		[--randimize-blocks]
+		[--mix-blocks]
 		[--colorize [--min-percentile=n] [--max-percentile=n] [--colorize-prob=p]]
 		[--rgb]
 		[--lab]
@@ -37,6 +41,14 @@ The pixels of the image are sorted in color space distance order - pixels closes
 ##--randomize
 
 Columns and rows of {stride} pixel width of the input image are randomly permuted.
+
+##--randomize-blocks
+
+Randomly swaps blocks of the input image to form the output image. Unlike --randomize, the row and column neighbours of an input block are not preserved int he output image. The size of the moved blocks are specified by --width and --height.
+
+##mix-blocks
+
+Mixes the pixels within blocks of the size specified by --width and --height.
 
 ##--colorize
 
@@ -71,6 +83,10 @@ Here is the same image randomized with various stride sizes:
 ![randomized](doc/random-16.png)
 ![randomized](doc/random-32.png)
 
+Here is the image mixed in 16x16 and 3x495 blocks:
+
+![mix-16x16](doc/mix-16x16.png) ![mix-3x495](doc/mix-3x495.png)
+
 Here is the same image sorted by distance in the RGB and Lab color spaces:
 
 	wgbb --jpeg --sort-by-distance < input/original.jpeg > output/distance-rgb.png
@@ -83,8 +99,9 @@ Here is a sort by distance analysis and randomization done to a small snippet of
 	wgbb --jpeg --sort-by-distance < input/snippet.jpeg > output/snippet-distance.png
 	wgbb --jpeg --randomize < input/snippet.jpeg > output/snippet-random.png
 	wgbb --jpeg --randomize-blocks < input/snippet.jpeg > output/snippet-randomize-blocks.png
+	wgbb --jpeg --mix-blocks --height 3 --width 210 < input/snippet.jpeg > output/snippet-mix.png
 
-![snippet](input/snippet.jpg) ![snippet-sorted-by-distance](doc/snippet-distance.png) ![snippet-random](doc/snippet-random.png) ![snippet-random](doc/snippet-randomize-blocks.png)
+![snippet](input/snippet.jpg) ![snippet-sorted-by-distance](doc/snippet-distance.png) ![snippet-random](doc/snippet-random.png) ![snippet-random](doc/snippet-randomize-blocks.png) ![snippet-mix](doc/snippet-mix.png)
 
 Here is the same sort by distance analysis done to a snippet of the gold (or black) region near the neckline:
 
