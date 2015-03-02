@@ -29,6 +29,8 @@ func die(msg string) {
 func main() {
 
 	stride := 1
+	width := 1
+	height := 1
 	randomize := false
 	sortDistance := false
 	readJpeg := false
@@ -41,9 +43,13 @@ func main() {
 	refColorHex := "#000000"
 	useLab := false
 	useRgb := true
+	doRandomizeBlocks := false
 
 	flag.BoolVar(&randomize, "randomize", false, "randomly sort the rows and colums of the image using blocks of stride pixels dimension.")
+	flag.BoolVar(&doRandomizeBlocks, "randomize-blocks", false, "randomly sort the blocks of the image")
 	flag.IntVar(&stride, "stride", 1, "Size of the block used for randomizing.")
+	flag.IntVar(&width, "width", 1, "Width of the block used for randomizing blocks.")
+	flag.IntVar(&height, "height", 1, "Height of the block used for randomizing blocks.")
 	flag.BoolVar(&sortDistance, "sort-by-distance", false, "Sort the image by color space distance.")
 	flag.BoolVar(&runColorize, "colorize", false, "colorize pixels with a distance between --min-percentile and --max-percentile of --ref-color.")
 	flag.BoolVar(&readJpeg, "jpeg", false, "The input is a jpeg rather than png.")
@@ -65,7 +71,7 @@ func main() {
 		useRgb = true
 	}
 
-	processImage := readJpeg || randomize || sortDistance || runColorize || useLab
+	processImage := readJpeg || randomize || sortDistance || runColorize || useLab || doRandomizeBlocks
 
 	if processImage {
 		if readJpeg {
@@ -115,6 +121,9 @@ func main() {
 		permute = true
 	} else if sortDistance {
 		permutation = sortByDistance(img, aRefColor, metric)
+		permute = true
+	} else if doRandomizeBlocks {
+		permutation = randomizeBlocks(img, width, height)
 		permute = true
 	} else if processImage {
 		// just fallthrough

@@ -71,3 +71,46 @@ func randomizeRowsAndColumns(img image.Image, stride int) [][]image.Point {
 	}
 	return permutation
 }
+
+// randomize blocks - moves blocks of size width and height
+func randomizeBlocks(img image.Image, width, height int) [][]image.Point {
+	lenX := (img.Bounds().Max.X - img.Bounds().Min.X)
+	lenY := (img.Bounds().Max.Y - img.Bounds().Min.Y)
+
+	xBlocks := lenX / width
+	yBlocks := lenY / height
+	// normalize to whole blocks
+	outLenX := xBlocks * width
+	outLenY := yBlocks * height
+
+	blocks := make([]int, xBlocks*yBlocks)
+	for i, _ := range blocks {
+		blocks[i] = i
+	}
+	blocks = randomPermuteSlice(blocks, 1)
+	out := make([][]image.Point, outLenX)
+	for i, _ := range out {
+		out[i] = make([]image.Point, outLenY)
+	}
+
+	toSource := func(b int) (int, int) {
+		bX := b % xBlocks
+		bY := b / xBlocks
+
+		bbX := bX * width
+		bbY := bY * height
+
+		return bbX, bbY
+	}
+
+	for i, b := range blocks {
+		fx, fy := toSource(b)
+		tx, ty := toSource(i)
+		for x := 0; x < width; x++ {
+			for y := 0; y < height; y++ {
+				out[tx+x][ty+y] = image.Point{X: fx + x, Y: fy + y}
+			}
+		}
+	}
+	return out
+}
