@@ -2,7 +2,6 @@ package main
 
 import (
 	"image"
-	"math"
 	"math/rand"
 	"time"
 )
@@ -36,11 +35,10 @@ func randomizeRowsAndColumns(img image.Image, stride int) [][]image.Point {
 
 	lenX := (img.Bounds().Max.X - img.Bounds().Min.X)
 	lenY := (img.Bounds().Max.Y - img.Bounds().Min.Y)
-	dim := int(math.Sqrt(float64(lenX * lenY)))
 
-	permutation := make([][]image.Point, dim)
+	permutation := make([][]image.Point, lenX)
 	for i, _ := range permutation {
-		permutation[i] = make([]image.Point, dim)
+		permutation[i] = make([]image.Point, lenY)
 	}
 
 	permuteX := make([]int, lenX)
@@ -56,16 +54,12 @@ func randomizeRowsAndColumns(img image.Image, stride int) [][]image.Point {
 
 	permuteX = randomPermuteSlice(permuteX, stride)
 	permuteY = randomPermuteSlice(permuteY, stride)
-	limit := dim * dim
 
 	for i, _ := range permuteX {
 		for j, _ := range permuteY {
 			offset := i*lenY + j
-			if offset == limit {
-				break
-			}
-			ii := offset / dim
-			jj := offset % dim
+			ii := offset / lenX
+			jj := offset % lenX
 			permutation[ii][jj] = image.Point{X: permuteX[i], Y: permuteY[j]}
 		}
 	}
