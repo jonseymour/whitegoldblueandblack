@@ -40,15 +40,15 @@ The pixels of the image are sorted in color space distance order - pixels closes
 
 ##--randomize
 
-Columns and rows of {stride} pixel width of the input image are randomly permuted.
+Columns and rows of {stride} pixel width of the input image are randomly permuted. If two blocks are in the same row or column in the input image, they will be also be in the same row and column of the output image, however the row and colum may be different and the distance between the blocks may also be different.
 
 ##--randomize-blocks
 
-Randomly swaps blocks of the input image to form the output image. Unlike --randomize, the row and column neighbours of an input block are not preserved int he output image. The size of the moved blocks are specified by --width and --height.
+Randomly swaps blocks of the input image to form the output image. Unlike --randomize, the row and column neighbours of an input block are not preserved in the output image. The size of the moved blocks are specified by --width and --height.
 
-##mix-blocks
+##--mix-blocks
 
-Mixes the pixels within blocks of the size specified by --width and --height.
+Randomly mixes the pixels within blocks of the size specified by --width and --height.
 
 ##--colorize
 
