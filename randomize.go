@@ -114,3 +114,49 @@ func randomizeBlocks(img image.Image, width, height int) [][]image.Point {
 	}
 	return out
 }
+
+func mixBlocks(img image.Image, width, height int) [][]image.Point {
+	lenX := (img.Bounds().Max.X - img.Bounds().Min.X)
+	lenY := (img.Bounds().Max.Y - img.Bounds().Min.Y)
+
+	xBlocks := lenX / width
+	yBlocks := lenY / height
+	// normalize to whole blocks
+	outLenX := xBlocks * width
+	outLenY := yBlocks * height
+
+	out := make([][]image.Point, outLenX)
+	for i, _ := range out {
+		out[i] = make([]image.Point, outLenY)
+	}
+
+	toSource := func(b int) (int, int) {
+		bX := b % xBlocks
+		bY := b / xBlocks
+
+		bbX := bX * width
+		bbY := bY * height
+
+		return bbX, bbY
+	}
+
+	toXY := func(x int) (int, int) {
+		return x % width, x / width
+	}
+
+	block := make([]int, width*height)
+	for i, _ := range block {
+		block[i] = i
+	}
+
+	for i := 0; i < xBlocks*yBlocks; i++ {
+		block = randomPermuteSlice(block, 1)
+		bX, bY := toSource(i)
+		for i, b := range block {
+			tx, ty := toXY(i)
+			fx, fy := toXY(b)
+			out[bX+tx][bY+ty] = image.Point{X: bX + fx, Y: bY + fy}
+		}
+	}
+	return out
+}

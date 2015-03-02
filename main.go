@@ -44,9 +44,11 @@ func main() {
 	useLab := false
 	useRgb := true
 	doRandomizeBlocks := false
+	doMixBlocks := false
 
 	flag.BoolVar(&randomize, "randomize", false, "randomly sort the rows and colums of the image using blocks of stride pixels dimension.")
 	flag.BoolVar(&doRandomizeBlocks, "randomize-blocks", false, "randomly sort the blocks of the image")
+	flag.BoolVar(&doMixBlocks, "mix-blocks", false, "randomly mix pixels within blocks of an image")
 	flag.IntVar(&stride, "stride", 1, "Size of the block used for randomizing.")
 	flag.IntVar(&width, "width", 1, "Width of the block used for randomizing blocks.")
 	flag.IntVar(&height, "height", 1, "Height of the block used for randomizing blocks.")
@@ -71,7 +73,7 @@ func main() {
 		useRgb = true
 	}
 
-	processImage := readJpeg || randomize || sortDistance || runColorize || useLab || doRandomizeBlocks
+	processImage := readJpeg || randomize || sortDistance || runColorize || useLab || doRandomizeBlocks || doMixBlocks
 
 	if processImage {
 		if readJpeg {
@@ -124,6 +126,9 @@ func main() {
 		permute = true
 	} else if doRandomizeBlocks {
 		permutation = randomizeBlocks(img, width, height)
+		permute = true
+	} else if doMixBlocks {
+		permutation = mixBlocks(img, width, height)
 		permute = true
 	} else if processImage {
 		// just fallthrough
