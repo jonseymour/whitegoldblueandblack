@@ -45,6 +45,7 @@ func main() {
 	useRgb := true
 	doRandomizeBlocks := false
 	doMixBlocks := false
+	runRecolor := false
 
 	flag.BoolVar(&randomize, "randomize", false, "randomly sort the rows and colums of the image using blocks of stride pixels dimension.")
 	flag.BoolVar(&doRandomizeBlocks, "randomize-blocks", false, "randomly sort the blocks of the image")
@@ -62,6 +63,7 @@ func main() {
 	flag.StringVar(&refColorHex, "ref-color", "#000000", "The reference color to use for distance sorting.")
 	flag.BoolVar(&useRgb, "rgb", false, "Use the RGBA64 color space for distance measurements.")
 	flag.BoolVar(&useLab, "lab", false, "Use the Lab color space for distance measurements.")
+	flag.BoolVar(&runRecolor, "recolor", false, "Recolor the --ref-color with --color.")
 	flag.Parse()
 
 	var img image.Image
@@ -73,7 +75,7 @@ func main() {
 		useRgb = true
 	}
 
-	processImage := readJpeg || randomize || sortDistance || runColorize || useLab || doRandomizeBlocks || doMixBlocks
+	processImage := readJpeg || randomize || sortDistance || runColorize || useLab || doRandomizeBlocks || doMixBlocks || runRecolor
 
 	if processImage {
 		if readJpeg {
@@ -114,6 +116,8 @@ func main() {
 			metric:              metric,
 		}
 		img = transform.transform(img)
+	} else if runRecolor {
+		img = recolor(img, aRefColor, aColor)
 	}
 
 	var permutation [][]image.Point
